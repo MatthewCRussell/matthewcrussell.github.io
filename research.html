@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matthew C. Russell</title>
+    <meta name="description" content="Matthew C. Russell">
+    <link rel="stylesheet" href="style.css">
+    <meta name="theme-color" content="#ffffff">
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+</head>
+
+
+
+<body>
+    <!-- Navigation bar -->
+    <nav>
+      <ul>
+        <li><a href="index.html" class="current">Home</a></li>
+        <li><a href="publications.html">Publications</a></li>
+        <li><a href="research.html">Research</a></li>
+        <li><a href="links.html">Links</a></li>
+        <li><a href="CV_MCR.pdf" target="_blank">CV</a></li>
+      </ul>
+    </nav>
+    
+    <!-- Header -->
+    <header>
+      <h1>Matthew C. Russell</h1>
+    </header>
+    
+    <!-- Main body text -->
+    <section>
+
+
+<h2>Research interests</h2>
+
+<h3>Pure mathematics: integer partitions and \(q\)-series</h3>
+
+I am primarily interested in sum-to-product identities in integer partitions and \(q\)-series. These identities lie at the intersection of combinatorics, number theory, and the representation theory of affine Lie algebras. <br>  <br>
+
+A <i>partition</i> of a non-negative integer \(n\)  is a non-increasing sequence of positive integers that sums to \(n\):
+\(&lambda;_1+&lambda;_2+\cdots+&lambda;_j=n\).
+For example, there are seven partitions of 5: 5, 4+1, 3+2, 3+1+1, 2+2+1, 2+1+1+1, and 1+1+1+1+1. <br>  <br>
+ 
+Sometimes, we will want to consider partitions subject to certain restrictions.
+If we only allow odd numbers as summands (called parts), then there are three partitions of 5: 5, 3+1+1, and 1+1+1+1+1.
+If instead we restrict our partitions to require that all parts in a given partition must be distinct, then there are also three partitions of 5: 5, 4+1, and 3+2. <br>  <br>
+
+This is not a coincidence: a straightforward theorem of Euler states that, for any nonnegative integer \(n\), the number of partitions of \(n\) into odd parts equals the number of partitions of \(n\) into distinct parts.  This is an example of a <i>partition identity.</i> <br>  <br>
+
+The first Rogers-Ramanujan identity is, on its surface, a similar statement: for any nonnegative integer \(n\), the number of partitions of \(n\) into parts congruent to 1 or 4 (mod 5) equals the number of partitions of \(n\) with difference at least 2 between successive parts. This identity has an analytic counterpart:
+\[
+\sum_{j \ge 0}\frac{q^{j^2}}{\left(1-q\right)\left(1-q^2\right)\cdots\left(1-q^j\right)} = \prod_{m\ge0}\frac{1}{\left(1-q^{5m+1}\right)\left(1-q^{5m+4}\right)}.
+\]
+Expressions like these are known as \(q\)-series. Viewing both sides as generating functions for certain sets of partitions gives the combinatorial interpretation above. <br> <br>
+
+These two identities &mdash; Euler's odd-distinct identity and the first Rogers-Ramanujan identity &mdash;  are examples of partition identities: statements that, for all nonnegative integers $n$, the number of partitions of \(n\) into partitions of one type equals the mumber of partitions of \(n\) into a different type. A sum-to-product identity similar to the analytic identity above is called a \(q\)-series identity. <br> <br>  <hr> <br>
+ 
+As an example of my work, consider MacMahon's sequence-avoiding partition identity, published in the first modern combinatorics textbook in 1916: <br> <br>
+
+Let \(n\) be a nonnegative integer.
+<ul>
+<li> Let \(A_1(n)\) be the number of partitions of \(n\) into parts congruent to 0, 2, 3, or 4 (mod 6). </li>
+<li> Let \(A_2(n)\) be the number of partitions of \(n\) where no consecutive integers appear as parts, and all parts are at least 2.  </li>
+</ul>
+Then, \(A_1(n)=A_2(n)\).  <br>  <br>
+
+Identities often come in families that all correspond to the same modulus. I found a <a href="https://www.combinatorics.org/ojs/index.php/eljc/article/view/v32i1p4" target="_blank" rel="noopener">companion result</a>, also involving the modulus 6:  <br>  <br>
+
+Let \(n\) be a nonnegative integer.
+<ul>
+<li> Let \(C_1(n)\) be the number of partitions of \(n\) into parts congruent to 0, 1, 3, or 5 (mod 6).
+<li> Let \(C_2(n)\) be the number of partitions of \(n\) that satisfy the following conditions:
+<ul>
+<li> If adjacent parts differ by exactly 1, the smaller part cannot be congruent to 1 (mod 3).
+<li> If adjacent parts differ by exactly 2, the smaller part must be congruent to 2 (mod 3).
+<li> No parts are equal to 2.
+</ul>
+</ul>
+Then, \(C_1(n)=C_2(n)\). <br> <br> <hr> <br>
+
+I also love to use computer experimentation to discover new identities. Around a decade ago, together with my collaborator Shashank Kanade, I published a <a href="http://www.tandfonline.com/doi/abs/10.1080/10586458.2015.1015186" target="_blank" rel="noopener">set of conjectures</a>. Here is one: <br> <br> 
+
+The number of partitions of a non-negative integer \(n\) into parts congruent to 2, 3, 5, or 8 (mod 9) is the same as the number of partitions of \(n\) with smallest part at least 2 and difference at least 3 at distance 2 such that if two consecutive parts differ by at most 1, then their sum is congruent to 2 (mod 3).  <br> <br> 
+
+Ka&#287;an Kur&#351;ung&#246;z <a href="https://link.springer.com/article/10.1007/s00026-019-00470-7" target="_blank" rel="noopener">showed</a> that this conjecture is equivalent to the following analytic conjecture:
+\[
+\sum_{m,n\ge 0} \frac{q^{m^2+3mn+3n^2+m+2n}}{\left(q;\,q\right)_m\left(q^3;\,q^3\right)_n} = \frac{1}{\left(q^2,\,q^3,\,q^5,\,q^8;\,q^9\right)_\infty}
+\]
+(Notation: \(\left(a;q\right)_j = \left(1-a\right)\left(1-aq\right)\cdots\left(1-aq^{j-1}\right)\), \(\left(a;q\right)_\infty=\lim_{j\to \infty}\left(a;q\right)_j\), and \(\left(a_1,a_2,\cdots,a_k;q\right)_n=\left(a_1;q\right)_n\left(a_2;q\right)_n \cdots\left(a_k;q\right)_n\).) <br> <br>
+
+This conjecture remains open. In a <a href="https://ecajournal.haifa.ac.il/Volume2021/ECA2021_S3I12.pdf" target="_blank" rel="noopener">2021 interview</a>, George E. Andrews mentioned this as one of the open problems that are most interesting to him. 
+
+<br> <br> <hr> <br>
+
+My ongoing research involves variants of integer partitions, such as colored partitions and cylindric partitions, along with identities that arise from algebra&iuml;c structures:
+
+<ul>
+
+<li> Shashank Kanade and I recently introduced what we call <a href="http://arxiv.org/abs/2508.15113" target="_blank" rel="noopener">tight cylindric partitions</a>, and connected them to elegant sum-to-product identities. </li>
+
+<li> In 2022, Shashank Kanade and I <a href="https://academic.oup.com/imrn/article-abstract/2023/20/17100/6702446" target="_blank" rel="noopener">examined</a> the <a href="https://www.ams.org/journals/jams/1999-12-03/S0894-0347-99-00297-0/" target="_blank" rel="noopener">Andrews-Schilling-Warnaar identities</a>. We related these to three-line cylindric partitions, and found and proved some missing cases of these \(q\)-series identities.  </li>
+
+<li> I <a href="http://arxiv.org/abs/2306.16251" target="_blank" rel="noopener">found</a> bivariate generating functions for the \(k=1\) cases of conjectured <a href="https://arxiv.org/abs/2106.06262" target="_blank" rel="noopener">colored partition identities</a> of Stefano Capparelli, Arne Meurman, Andrei Primc, and Mirko Primc, and was able to provide a bijection connecting them to two-line cylindric partitions. </li> 
+
+</section>
+
+</body>
+  
+<footer>
+<section>
+<h3>Page last updated: January 7, 2026.</h3>
+</section>
+</footer>
+</html>

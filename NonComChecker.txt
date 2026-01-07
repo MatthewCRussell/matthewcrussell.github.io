@@ -1,0 +1,590 @@
+###########################################################################
+# NonComChecker:                                                          #
+#                                                                         #
+# Written to accompany the paper                                          #
+# Noncommutative recursions and the Laurent phenomenon                    #
+# by Matthew C. Russell                                                   #
+#                                                                         #
+# Also contains code originally written by Doron Zeilberger               #
+# from NCFPS, along with using its data structure for                     #
+# noncommutative polynomials                                              #
+#                                                                         #
+# Last updated: December 17, 2013                                         #
+###########################################################################
+
+print(`NonComChecker:`):
+print(``):
+print(`Written to accompany the paper `):
+print(`Noncommutative recursions and the Laurent phenomenon`):
+print(`by Matthew C. Russell`):
+print(``):
+print(`Also contains code originally written by Doron Zeilberger`):
+print(`from NCFPS, along with using its data structure for`):
+print(`noncommutative polynomials`):
+print(``):
+print(`Last updated: December 17, 2013`):
+print(`For help, type Help();`):
+
+
+Help:=proc()
+if args=NULL then
+	print(`Main procedures are`):
+	print(`BruteForceSimplify(H,x);`):
+	print(`Theorem2(H,x);`):
+	print(`VerifyPaper(H,x);`):
+	print(`RandomTest(K,d,maxc);`):
+	print(`RandomTestSilent(K,d,maxc);`):
+	print(``):
+	print(`For a list of polynomial manipulation procedures,`):
+	print(`type Help(Manipulate);`):
+	print(``):
+	print(`For a list of helping procedures,`):
+	print(`type Help(Helping);`):
+	print(``):
+	print(`For information about the data structure,`):
+	print(`type Help(DataStructureHelp);`):
+	print(``):
+	print(`Type Help(function_name); to see the help for a specific function`):
+	print(`(omit the argument of the function when typing,`):
+	print(`e.g., Help(BruteForceSimplify);)`):
+
+elif args=BruteForceSimplify then
+	print(`BruteForceSimplify(H,x):`):
+	print(`Inputs H, a list of polynomials in a variable x.`):
+	print(`These are assumed to be h1(x), h2(x), ..., hK(x) = h0(x)`):
+	print(`Creates a list of equations, including`):
+	print(`(1), (2), (3), (5), and (6) (as numbered in the paper),`):
+	print(`and simplifies Y[2K] using these equations`):
+	print(`through EqReplace`):
+	print(`Try: BruteForceSimplify([1+x^2,1+3*x+x^2,1+x+x^2+x^3],x);`):
+
+elif args=Theorem2 then
+	print(`Theorem2(H,x):`):
+	print(`Inputs H, a list of polynomials in a variable x.`):
+	print(`These are assumed to be h1(x), h2(x), ..., hK(x) = h0(x)`):
+	print(`Outputs the expression for Y[2K] at the end of Theorem 2.`):
+	print(`The only simplification it does is`):
+	print(`and simplifies Y[2K] using these equations:`):
+	print(`a[j]*b[j+K] = b[j+K]*a[j] = b[j]*a[j+K] = a[j+K]*b[j] = 1.`):
+	print(`Try: Theorem2([1+x^2,1+3*x+x^2,1+x+x^2+x^3],x);`):
+
+elif args=VerifyPaper then
+	print(`VerifyPaper(H,x):`):
+	print(`Inputs H, a list of polynomials in a variable x.`):
+	print(`These are assumed to be h1(x), h2(x), ..., hK(x) = h0(x)`):
+	print(`Calculates BruteForceSimplify(H,x) and Theorem2(H,x)`):
+	print(`and returns true if they represent the same noncommutative polynomial`):
+	print(`Try: VerifyPaper([1+x^2,1+3*x+x^2,1+x+x^2+x^3],x);`):
+
+elif args=RandomTest then
+	print(`RandomTest(K,d,maxc):`):
+	print(`Inputs positive integers K, d, maxc`):
+	print(`Creates a random list of length K`):
+	print(`of monic palindromic polynomials of degree d`):
+	print(`with coefficients between -maxc and maxc`):
+	print(`Tells you the list it created`):
+	print(`Verifies the theorem for that set of polynomials`):
+	print(`Try: RandomTest(3,4,10);`):
+
+elif args=RandomTestSilent then
+	print(`RandomTest(K,d,maxc):`):
+	print(`Inputs positive integers K, d, maxc`):
+	print(`Creates a random list of length K`):
+	print(`of monic palindromic polynomials of degree d`):
+	print(`with coefficients between -maxc and maxc`):
+	print(`Verifies the theorem for that set of polynomials`):
+	print(`Try: RandomTestSilent(3,4,10);`):
+
+elif args=DataStructureHelp then
+	print(`Each monomial is written as a list with two elements.`):
+	print(`The first element is its coefficient.`):
+	print(`The second is itself a list, which contains the variables in order.`):
+	print(`For example, we could have`):
+	print(`[-37,[x,y,y,z,y,z]],`):
+	print(`which is more usually written as`):
+	print(`-37*x*y^2^z*y*z.`):
+	print(``):
+	print(`It is possible for the second list to be empty.`):
+	print(`This would mean it is a constant term.`):
+	print(`For example,`):
+	print(`[4,[]]`):
+	print(`represents the constant term 4.`):
+	print(``):
+	print(`Then, a polynomial is written as a list of the above monomials.`):
+	print(`For example, we could have`):
+	print(`[ [7,[x,y]], [-3,[y]], [1,[x,x]] ]`):
+	print(`which would represent`):
+	print(`7*x*y - 3*y + x^2.`):
+
+elif args=Manipulate then
+	print(`Polynomial manipulation procedures are`):
+	print(`Pashet(F);`):
+	print(`MulPols(L);`):
+	print(`MulPols1(P1,P2);`):
+	print(`EqReplace(poly,Se);`):
+
+elif args=Pashet then
+	print(`Pashet(F):`):
+	print(`Simplifies polynomial F`):
+	print(`Taken from Doron Zeilberger's NCFPS package`):
+
+elif args=MulPols then
+	print(`MulPols(L):`):
+	print(`inputs a list of noncommutative polynomials`):
+	print(`returns their product`):
+	print(`(recursively computed using MulPols1)`):
+
+elif args=MulPols then
+	print(`MulPols1(P1,P2):`):
+	print(`multiplies (noncommutative) polynomials P1, P2`):
+
+elif args=EqReplace then
+	print(`EqReplace(poly,Se):`):
+	print(`Inputs a polynomial poly and a set of equations Se,`):
+	print(`each written as a replacement rule`):
+	print(`Rewrites poly according to the replacement rules`):
+
+elif args=Helping then
+	print(`Helping procedures are`):
+	print(`DA(h,x);`):
+	print(`DADA(h,x);`):
+	print(`YP(n,m);`):
+	print(`YM(n,m);`):
+	print(`A(H,x,j,s);`):
+	print(`At(H,x,j,s,t);`):
+
+elif args=DA then
+	print(`DA(h,x):`):
+	print(`inputs a polynomial h in x`):
+	print(`returns h^{downarrow}(x),`):
+	print(`as defined at the start of the preliminaries`):
+	print(`Try: DA(1+3*x+x^2,x);`):
+
+elif args=DADA then
+	print(`DADA(h,x):`):
+	print(`inputs a polynomial h in x`):
+	print(`returns h^{downarrow downarrow}(x),`):
+	print(`as defined at the start of the preliminaries`):
+	print(`Try: DADA(1+3*x+x^2,x);`):
+
+elif args=YP then
+	print(`YP(n,m):`):
+	print(`returns Y^+(n,m)`):
+	print(`as defined in the paper`):
+	print(`Try: YP(5,2);`):
+
+elif args=YM then
+	print(`YM(n,m):`):
+	print(`returns Y^-(n,m)`):
+	print(`as defined in the paper`):
+	print(`Try: YM(2,5);`):
+
+elif args=A then
+	print(`A(H,x,j,s):`):
+	print(`Inputs a set H of polynomials in x,`):
+	print(`along with integers j and s`):
+	print(`Returns A(j,s), as defined in Lemma 7`):
+
+elif args=At then
+	print(`At(H,x,j,s,t):`):
+	print(`Calculates a single term of the product`):
+	print(`at the start of A(j,s)`):
+
+else
+	print(`There is no help for`,args):
+fi:
+
+end:
+
+###########################################################################
+################### Polynomial manipulation procedures ####################
+###########################################################################
+
+# Pashet(F):
+# Simplifies polynomial F
+# Taken from Doron Zeilberger's NCFPS package
+
+Pashet:=proc(F) local T,gu,f,gu1,mu,mu1,lu,lu1,m,i:
+
+gu:={seq(f[2], f in F)}:
+for gu1 in gu do
+T[gu1]:=0:
+od:
+
+for f in F do
+T[f[2]]:=T[f[2]]+f[1]:
+od:
+
+mu:=[]:
+
+for gu1 in gu do
+ if T[gu1]<>0 then
+  mu:=[op(mu),[T[gu1],gu1]] :
+ fi:
+od:
+
+for mu1 in mu do
+T[mu1[2]]:=mu1[1]:
+od:
+
+lu:=[seq(mu1[2],mu1 in mu)]:
+lu:=sort(lu):
+
+gu:=[seq([T[lu1],lu1],lu1 in lu)]:
+
+m:=max(seq(nops(gu1[2]),gu1 in gu)):
+
+for i from 0 to m do
+T[i]:=[]:
+od:
+
+for gu1 in gu do
+T[nops(gu1[2])]:=[op(T[nops(gu1[2])]),gu1]:
+od:
+
+for i from 0 to m do
+T[i]:=sort(T[i]):
+od:
+
+[seq(op(T[i]),i=0..m)]:
+end:
+
+###########################################################################
+
+# MulPols(L):
+# inputs a list of noncommutative polynomials
+# returns their product
+# (recursively computed using MulPols1)
+
+MulPols:=proc(L) local MP:
+option remember:
+
+if nops(L)=0 then
+	return [[1,[]]]:
+fi:
+
+if nops(L)=1 then
+	return L[1]:
+fi:
+
+MP:=MulPols1(L[1],L[2]):
+return Pashet(MulPols([MP,op(3..nops(L),L)])):
+
+end:
+
+###########################################################################
+
+# MulPols1(P1,P2):
+# multiplies (noncommutative) polynomials P1, P2
+
+MulPols1:=proc(P1,P2) local p1, p2:
+
+return Pashet([seq(seq([p1[1]*p2[1],[op(p1[2]),op(p2[2])]], p1 in P1), p2 in P2)]):
+
+end:
+
+###########################################################################
+
+# EqReplace(poly,Se):
+# Inputs a polynomial poly and a set of equations Se,
+# each written as a replacement rule
+# Rewrites poly according to the replacement rules
+
+EqReplace:=proc(poly,Se) local AllDone, NotDone, p, p2, flag, flag2, i, j, S, q, L, S2:
+
+AllDone:=[]:
+NotDone:=poly:
+while nops(NotDone)<>0 do
+	p:=NotDone[1]:
+	p2:=p[2]:
+	flag:=true:
+	for S in Se while flag do
+		for i from 1 to nops(p2)-nops(S[1])+1 while flag do
+			flag2:=true:
+			for j from 1 to nops(S[1]) while flag2 do
+				if p2[i+j-1]<>S[1,j] then
+					flag2:=false:
+				fi:
+			od:
+			if flag2 then
+				L:=[]:
+				for S2 in S[2] do
+					q:=[op(1..i-1,p2),op(S2[2]),op(i+nops(S[1])..nops(p2),p2)]:
+					L:=[op(L),[p[1]*S2[1],q]]:
+				od:
+				NotDone:=[op(2..nops(NotDone),NotDone),op(L)]:
+				flag:=false:
+			fi:
+		od:
+	od:
+	if flag then
+		NotDone:=[op(2..nops(NotDone),NotDone)]:
+		AllDone:=[op(AllDone),p]:
+	fi:
+od:
+
+return Pashet(AllDone):
+
+end:
+
+
+###########################################################################
+########################### Helping procedures ############################
+###########################################################################
+
+# DA(h,x):
+# inputs a polynomial h in x
+# returns h^{downarrow}(x),
+# as defined at the start of the preliminaries
+#
+# Try: DA(1+3*x+x^2,x);
+
+DA:=proc(h,x)
+return h-1:
+end:
+
+###########################################################################
+
+# DADA(h,x):
+# inputs a polynomial h in x
+# returns h^{downarrow downarrow}(x),
+# as defined at the start of the preliminaries
+#
+# Try: DADA(1+3*x+x^2,x);
+
+DADA:=proc(h,x)
+return DA(h,x)/x:
+end:
+
+###########################################################################
+
+# YP(n,m):
+# returns Y^+(n,m)
+# as defined in the paper
+#
+# Try: YP(5,2);
+
+YP:=proc(n,m) local i:
+if m=n+1 then
+	return [[1,[b[n]]]]:
+fi:
+if m>n+1 then
+	print("FAIL in YP"):
+	return "FAIL":
+fi:
+return [[1,[seq(op([b[i],Y[i]]),i=n..m,-1),b[m-1]]]]:
+end:
+
+###########################################################################
+
+# YM(n,m):
+# returns Y^-(n,m)
+# as defined in the paper
+#
+# Try: YM(2,5);
+
+YM:=proc(n,m) local i:
+if m=n-1 then
+	return [[1,[a[n-1]]]]:
+fi:
+if m<n-1 then
+	print("FAIL in YM"):
+	return "FAIL":
+fi:
+return [[1,[a[n-1],seq(op([Y[i],a[i]]),i=n..m)]]]:
+end:
+
+###########################################################################
+
+# A(H,x,j,s):
+# Inputs a set H of polynomials in x,
+# along with integers j and s
+# Returns A(j,s), as defined in Lemma 7
+
+A:=proc(H,x,j,s) local t, L, K, hjdada, M, d, co, M1:
+L:=MulPols([seq(At(H,x,j,s,t),t=1..j-1)]):
+K:=nops(H):
+hjdada:=simplify(DADA(H[j],x)):
+M:=[]:
+for d from 0 to degree(hjdada) do
+	co:=coeff(hjdada,x,d):
+	if co<>0 then
+		M1:=[co,[seq(op(YP(K+j-1,j+1)[1][2]),i=1..d)]]:
+		M:=[op(M),M1]:
+	fi:
+od:
+return Pashet(MulPols([L,M,YP(K+j-1,K+1),seq(YP(2*K-1,K+1),i=1..s)])):
+
+end:
+
+###########################################################################
+
+# At(H,x,j,s,t):
+# Calculates a single term of the product
+# at the start of A(j,s)
+
+At:=proc(H,x,j,s,t) local K, L, pp, d, co, L1:
+K:=nops(H):
+
+L:=[]:
+for pp in H[t] do
+	d:=degree(pp,x):
+	co:=coeff(pp,x,d):
+	L1:=[[co,[seq(op([a[j+K],op(YP(j,t+1)[1][2]),op(YP(K+t-1,j+1)[1][2])]),l=1..d)]]]:
+	L:=[op(L),op(L1)]:
+od:
+
+return Pashet(L):
+
+end:
+
+###########################################################################
+############################ Main procedures ##############################
+###########################################################################
+
+# BruteForceSimplify(H,x):
+# Inputs H, a list of polynomials in a variable x.
+# These are assumed to be h1(x), h2(x), ..., hK(x) = h0(x)
+# Creates a list of equations, including
+# (1), (2), (3), (5), and (6) (as numbered in the paper),
+# and simplifies Y[2K] using these equations
+# through EqReplace
+#
+# Try: BruteForceSimplify([1+x^2,1+3*x+x^2,1+x+x^2+x^3],x);
+
+BruteForceSimplify:=proc(H,x) local K, dK, pol, flipeq, commeqs, inveq, L, pp, d, co, L1, eq2K, eqK, moreeqs, i, eqs, man, ma, polfin, m, s, j:
+K:=nops(H):
+dK:=degree(H[K]):
+pol:=[[1,[Y[2*K]]]]:
+
+flipeq:=[[op(YM(1,K-1)[1][2]),Y[K]],[[1,[Y[K],op(YP(K-1,1)[1][2])]]]]:
+commeqs:={seq([[a[i],b[i+K]],[[1,[]]]],i=0..K),seq([[b[i],a[i+K]],[[1,[]]]],i=0..K)}:
+inveq:=[[Yinv[K],Y[K]],[[1,[]]]]:
+
+L:=[]:
+for pp in H[K] do
+	d:=degree(pp,x):
+	co:=coeff(pp,x,d):
+	L1:=[co,[Yinv[K],seq(op(YP(2*K-1,K+1)[1][2]),i=1..d)]]:
+	L:=[op(L),L1]:
+od:
+eq2K:=[[Y[2*K]],L]:
+
+L:=[[1,[Y[0],seq(op(YP(2*K-1,K+1)[1][2]),l=1..dK)]]]:
+for pp in H[K] do
+	d:=degree(pp,x):
+	if d>0 then
+		co:=coeff(pp,x,d):
+		L1:=[-co,[Yinv[K],seq(op(YM(1,K-1)[1][2]),i=1..d),seq(op(YP(2*K-1,K+1)[1][2]),l=1..dK)]]:
+		L:=[op(L),L1]:
+	fi:
+od:
+eqK:=[[Yinv[K],seq(op(YP(2*K-1,K+1)[1][2]),l=1..dK)],L]:
+
+moreeqs:={}:
+for i from 1 to K-1 do
+	L:=[]:
+	for pp in H[i] do
+		d:=degree(pp,x):
+		co:=coeff(pp,x,d):
+		L1:=[co,[seq(op(YP(K+i-1,i+1)[1][2]),l=1..d)]]:
+		L:=[op(L),L1]:
+	od:
+	moreeqs:=moreeqs union {[[Y[i],Y[K+i]],L]}:
+od:
+
+eqs:=commeqs union moreeqs union {flipeq, inveq, eq2K, eqK}:
+
+return Pashet(EqReplace(pol,eqs)):
+end:
+
+###########################################################################
+
+# Theorem2(H,x):
+# Inputs H, a list of polynomials in a variable x.
+# These are assumed to be h1(x), h2(x), ..., hK(x) = h0(x)
+# Outputs the expression for Y[2K] at the end of Theorem 2.
+# The only simplification it does is
+# a[j]*b[j+K] = b[j+K]*a[j] = b[j]*a[j+K] = a[j+K]*b[j] = 1.
+#
+# Try: Theorem2([1+x^2,1+3*x+x^2,1+x+x^2+x^3],x);
+
+Theorem2:=proc(H,x) local K, dK, polfin, pp, m, co, s, j, A1, temp:
+K:=nops(H):
+dK:=degree(H[K]):
+
+polfin:=[]:
+for pp in H[K] do
+	m:=degree(pp,x):
+	co:=coeff(pp,x,m):
+	for s from 0 to m-1 do
+		for j from 1 to K-1 do
+			temp:=[[-co,[seq(op(YP(K-1,1)[1][2]),i=1..s),op(YP(K-1,j+1)[1][2])]]]:
+			A1:=A(H,x,j,dK+s-m):
+			polfin:=[op(polfin),op(MulPols1(temp,A1))]:
+		od:
+	od:
+od:
+
+return EqReplace([[1,[Y[0],seq(op(YP(2*K-1,K+1)[1][2]) ,i=1..dK)]],op(polfin)],{seq([[a[i],b[i+K]],[[1,[]]]],i=0..K),seq([[b[i],a[i+K]],[[1,[]]]],i=0..K)}):
+
+end:
+
+###########################################################################
+
+# VerifyPaper(H,x):
+# Inputs H, a list of polynomials in a variable x.
+# These are assumed to be h1(x), h2(x), ..., hK(x) = h0(x)
+# Calculates BruteForceSimplify(H,x) and Theorem2(H,x)
+# and returns true if they represent the same noncommutative polynomial
+#
+# Try: VerifyPaper([1+x^2,1+3*x+x^2,1+x+x^2+x^3],x);
+
+VerifyPaper:=proc(H,x) local U, V:
+U:=BruteForceSimplify(H,x):
+V:=Theorem2(H,x):
+return evalb({op(U)}={op(V)}):
+
+end:
+
+###########################################################################
+
+# RandomTest(K,d,maxc):
+# Inputs positive integers K, d, maxc
+# Creates a random list of length K
+# of monic palindromic polynomials of degree d
+# with coefficients between -maxc and maxc
+# Tells you the list it created
+# Verifies the theorem for that set of polynomials
+#
+# Try: RandomTest(3,4,10);
+
+RandomTest:=proc(K,d,maxc) local x, ra, H:
+
+ra:=rand(-maxc..maxc):
+H:=[seq(1+add(ra()*(x^i+x^(d-i))+x^d,i=1..(d)/2),j=1..K)]:
+print(`Testing for `,H):
+return VerifyPaper(H,x):
+
+end:
+
+###########################################################################
+
+# RandomTestSilent(K,d,maxc):
+# Inputs positive integers K, d, maxc
+# Creates a list of length K
+# of monic palindromic polynomials of degree d
+# with coefficients between -maxc and maxc
+# Verifies the theorem for that set of polynomials
+#
+# Try: RandomTestSilent(3,4,10);
+
+RandomTestSilent:=proc(K,d,maxc) local x, ra, H:
+
+ra:=rand(-maxc..maxc):
+H:=[seq(1+x^d+add(ra()*(x^i+x^(d-i)),i=1..(d-1)/2),j=1..K)]:
+return VerifyPaper(H,x):
+
+end:
+
+###########################################################################
